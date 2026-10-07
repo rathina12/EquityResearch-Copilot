@@ -43,3 +43,14 @@ def test_pe_comps():
     result = implied_equity_value_from_pe(5.0, [20, 24, 22])
     assert result["peer_median_pe"] == 22
     assert result["implied_price"] == 110
+
+
+def test_pe_comps_rejects_non_positive_peers():
+    with pytest.raises(ValueError):
+        implied_equity_value_from_pe(5.0, [0, -2, -10])
+
+
+def test_pe_comps_ignores_invalid_peers_when_valid_values_exist():
+    result = implied_equity_value_from_pe(4.0, [-5, 18, 22, 0])
+    assert result["peer_median_pe"] == 20
+    assert result["implied_price"] == 80
